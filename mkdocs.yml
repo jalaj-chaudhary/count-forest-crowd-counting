@@ -1,0 +1,58 @@
+site_name: COUNT Forest Crowd Counting
+site_description: Reimplementation of COUNT Forest (Pham et al., ICCV 2015) on the Mall dataset. EE5340 Video Analytics course project, IIT Guwahati.
+site_author: Naman Bhalawat, Siddhant Zawar, Jalaj Chaudhary
+# Replace jalaj-chaudhary and count-forest-crowd-counting once the repository exists.
+site_url: https://jalaj-chaudhary.github.io/count-forest-crowd-counting/
+repo_url: https://github.com/jalaj-chaudhary/count-forest-crowd-counting
+repo_name: COUNT Forest
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.sections
+    - toc.follow
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Project Report: index.md
+  - Setup & Reproduction: setup.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - tables
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css

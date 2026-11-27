@@ -1,0 +1,15 @@
+# built site and notebook working files
+site/
+cache/
+.ipynb_checkpoints/
+__pycache__/
+.venv/
+venv/
+
+# the notebook downloads the Mall dataset (~100 MB) next to itself: never commit it
+mall_dataset/
+_mall_clone/
+
+# files the notebook writes into its working folder; the demo video that belongs to the site is docs/assets/video/
+*.raw.mp4
+/demo_counting.mp4
