@@ -13,7 +13,7 @@ This is a from-scratch reimplementation of **COUNT Forest** (Pham et al., ICCV 2
 | + crowdedness prior | **4.41** | **27.46** | **0.136** |
 | Paper, full method (quoted) | 2.50 | 10.0 | 0.080 |
 
-Setup and reproduction steps are in [`docs/setup.md`](docs/setup.md).
+Setup and run instructions are in [`docs/setup.md`](docs/setup.md).
 
 ## Repository layout
 

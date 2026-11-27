@@ -1,4 +1,9 @@
-# Setup & reproduction
+---
+hide:
+  - navigation
+---
+
+# Setup & How to Run
 
 ## 1. Requirements
 

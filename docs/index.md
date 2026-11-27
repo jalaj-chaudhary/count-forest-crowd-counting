@@ -1,26 +1,56 @@
 ---
+title: COUNT Forest Crowd Counting
 hide:
   - navigation
 ---
 
-<div class="hero" markdown>
-# COUNT Forest Crowd Counting
-<p><strong>A reimplementation of COUNT Forest (Pham et al., ICCV 2015), evaluated on the Mall dataset</strong></p>
-<p>EE5340 Video Analytics · Course project · IIT Guwahati · November 2026</p>
-<p>Team: Naman Bhalawat · Siddhant Zawar · Jalaj Chaudhary</p>
+<div class="cf-hero" markdown>
+
+<div class="cf-hero__text" markdown>
+
+<p class="cf-eyebrow">EE5340 Video Analytics · IIT Guwahati · November 2026</p>
+
+<h1 class="cf-title">COUNT <span class="cf-grad">Forest</span><br>Crowd Counting</h1>
+
+<p class="cf-sub">A from-scratch reimplementation of COUNT Forest (Pham et al., ICCV 2015), evaluated on the Mall dataset.</p>
+
+<div class="cf-team"><span><i>NB</i>Naman Bhalawat</span><span><i>SZ</i>Siddhant Zawar</span><span><i>JC</i>Jalaj Chaudhary</span></div>
+
+<div class="cf-cta" markdown>
+[Watch the demo](#9-video-demonstration-and-screen-recording-of-ppt){ .cf-btn .cf-btn--primary }
+[Slides (PPT)](#8-link-to-ppt-file-on-github){ .cf-btn }
+[Code on GitHub](https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/count_forest_full.ipynb){ .cf-btn }
+[Setup & how to run](setup.md){ .cf-btn }
 </div>
 
-<div class="stats" markdown>
-<div class="stat"><span class="num">4.41</span><span class="lbl">Test MAE, best variant<br>(paper: 2.50)</span></div>
-<div class="stat"><span class="num">0.84</span><span class="lbl">Correlation of predicted<br>and true counts</span></div>
-<div class="stat"><span class="num">1.73 MB</span><span class="lbl">Model size<br>(32 trees)</span></div>
-<div class="stat"><span class="num">1.8×</span><span class="lbl">Speed-up from<br>forest permutation</span></div>
-<div class="stat"><span class="num">CPU only</span><span class="lbl">Forest written from scratch<br>in NumPy</span></div>
 </div>
 
-**Quick links:** [Video demonstration](#9-video-demonstration-and-screen-recording-of-ppt) · [PPT](#8-link-to-ppt-file-on-github) · [Code (notebook)](https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/count_forest_full.ipynb) · [Setup & reproduction](setup.md)
+<div class="cf-hero__art"><img src="assets/img/hero_density.svg" alt="Head dots on the left become a smooth density map on the right; the map sums to the number of people"></div>
 
----
+</div>
+
+<div class="cf-stats">
+<div class="cf-stat"><span class="num">4.41</span><span class="lbl">Test MAE, best variant<br>(paper: 2.50)</span></div>
+<div class="cf-stat"><span class="num">0.84</span><span class="lbl">Correlation of predicted<br>and true counts</span></div>
+<div class="cf-stat"><span class="num">1.73 <small>MB</small></span><span class="lbl">Model size<br>(32 trees)</span></div>
+<div class="cf-stat"><span class="num">1.8×</span><span class="lbl">Speed-up from<br>forest permutation</span></div>
+<div class="cf-stat"><span class="num">CPU</span><span class="lbl">No GPU: forest written<br>from scratch in NumPy</span></div>
+</div>
+
+<p class="cf-toc-title">What is in this report</p>
+
+<div class="cf-toc">
+<a class="cf-card" href="#1-introduction"><span class="n">1</span><span><b>Introduction</b><span class="d">Why count crowds, and what we add</span></span></a>
+<a class="cf-card" href="#2-brief-literature-review"><span class="n">2</span><span><b>Literature review</b><span class="d">From regression to density forests</span></span></a>
+<a class="cf-card" href="#3-methodology"><span class="n">3</span><span><b>Methodology</b><span class="d">Patches, two-layer trees, density maps</span></span></a>
+<a class="cf-card" href="#4-experimental-setup"><span class="n">4</span><span><b>Experimental setup</b><span class="d">Mall dataset, metrics, baselines</span></span></a>
+<a class="cf-card" href="#5-results"><span class="n">5</span><span><b>Results</b><span class="d">Accuracy, ablations, heat maps, failures</span></span></a>
+<a class="cf-card" href="#6-conclusion"><span class="n">6</span><span><b>Conclusion</b><span class="d">What we learned and what is next</span></span></a>
+<a class="cf-card" href="#7-references"><span class="n">7</span><span><b>References</b><span class="d">Papers and the dataset</span></span></a>
+<a class="cf-card" href="#8-link-to-ppt-file-on-github"><span class="n">8</span><span><b>PPT on GitHub</b><span class="d">26 slides with speaker notes</span></span></a>
+<a class="cf-card" href="#9-video-demonstration-and-screen-recording-of-ppt"><span class="n">9</span><span><b>Video</b><span class="d">Demo clip and the recorded talk</span></span></a>
+</div>
+
 
 ## 1. Introduction
 

@@ -5,24 +5,28 @@ site_author: Naman Bhalawat, Siddhant Zawar, Jalaj Chaudhary
 site_url: https://jalaj-chaudhary.github.io/count-forest-crowd-counting/
 repo_url: https://github.com/jalaj-chaudhary/count-forest-crowd-counting
 repo_name: COUNT Forest
+copyright: EE5340 Video Analytics · IIT Guwahati · November 2026
 
 theme:
   name: material
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: deep orange
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: deep orange
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
   features:
     - navigation.tabs
     - navigation.top
@@ -34,7 +38,7 @@ theme:
 
 nav:
   - Project Report: index.md
-  - Setup & Reproduction: setup.md
+  - Setup & How to Run: setup.md
 
 markdown_extensions:
   - toc:
@@ -52,7 +56,11 @@ markdown_extensions:
 
 extra_javascript:
   - javascripts/mathjax.js
+  - javascripts/site.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 extra_css:
   - stylesheets/extra.css
+
+extra:
+  generator: false
