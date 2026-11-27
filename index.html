@@ -1,0 +1,1982 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reimplementation of COUNT Forest (Pham et al., ICCV 2015) on the Mall dataset. EE5340 Video Analytics course project, IIT Guwahati.">
+      
+      
+        <meta name="author" content="Naman Bhalawat, Siddhant Zawar, Jalaj Chaudhary">
+      
+      
+        <link rel="canonical" href="https://jalaj-chaudhary.github.io/count-forest-crowd-counting/">
+      
+      
+      
+        <link rel="next" href="setup/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>COUNT Forest Crowd Counting - COUNT Forest Crowd Counting</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#count-forestcrowd-counting" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="COUNT Forest Crowd Counting" class="md-header__button md-logo" aria-label="COUNT Forest Crowd Counting" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            COUNT Forest Crowd Counting
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              COUNT Forest Crowd Counting
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/jalaj-chaudhary/count-forest-crowd-counting" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    COUNT Forest
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Project Report
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="setup/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Setup & How to Run
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="COUNT Forest Crowd Counting" class="md-nav__button md-logo" aria-label="COUNT Forest Crowd Counting" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    COUNT Forest Crowd Counting
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/jalaj-chaudhary/count-forest-crowd-counting" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    COUNT Forest
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Report
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Motivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Problem statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Contributions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-brief-literature-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Brief literature review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Methodology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-density-map-and-patch-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Density map and patch labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-patch-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Patch features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-tree-training-two-split-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Tree training: two split layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-leaf-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Leaf model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-density-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Density estimation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-crowdedness-prior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Crowdedness prior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-forest-permutation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Forest permutation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-heat-map-and-stationary-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Heat map and stationary time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-settings-the-paper-leaves-open" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Settings the paper leaves open
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-experimental-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Experimental setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Experimental setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-dataset-protocol-and-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Dataset, protocol and metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-baseline-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Baseline algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-implementation-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Implementation platform
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-quantitative-results-on-the-test-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Quantitative results on the test set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-ablations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Ablations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-qualitative-results-and-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Qualitative results and applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-discussion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Discussion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-failure-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Failure cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Conclusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Future work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-link-to-ppt-file-on-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Link to PPT file (on GitHub)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-video-demonstration-and-screen-recording-of-ppt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Video demonstration and screen recording of PPT
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Video demonstration and screen recording of PPT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#video-demonstration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Video demonstration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screen-recording-of-the-ppt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Screen recording of the PPT
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & How to Run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Motivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Problem statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Contributions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-brief-literature-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Brief literature review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Methodology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-density-map-and-patch-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Density map and patch labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-patch-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Patch features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-tree-training-two-split-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Tree training: two split layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-leaf-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Leaf model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-density-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Density estimation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-crowdedness-prior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Crowdedness prior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-forest-permutation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Forest permutation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-heat-map-and-stationary-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Heat map and stationary time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-settings-the-paper-leaves-open" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Settings the paper leaves open
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-experimental-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Experimental setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Experimental setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-dataset-protocol-and-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Dataset, protocol and metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-baseline-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Baseline algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-implementation-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Implementation platform
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-quantitative-results-on-the-test-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Quantitative results on the test set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-ablations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Ablations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-qualitative-results-and-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Qualitative results and applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-discussion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Discussion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-failure-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Failure cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Conclusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Future work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-link-to-ppt-file-on-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Link to PPT file (on GitHub)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-video-demonstration-and-screen-recording-of-ppt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Video demonstration and screen recording of PPT
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Video demonstration and screen recording of PPT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#video-demonstration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Video demonstration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screen-recording-of-the-ppt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Screen recording of the PPT
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+
+
+
+  
+  
+
+
+<div class="cf-hero">
+<div class="cf-hero__text">
+<p class="cf-eyebrow">EE5340 Video Analytics · IIT Guwahati · November 2026</p>
+<h1 class="cf-title" id="count-forestcrowd-counting">COUNT <span class="cf-grad">Forest</span><br>Crowd Counting<a class="headerlink" href="#count-forestcrowd-counting" title="Permanent link">&para;</a></h1>
+<p class="cf-sub">A from-scratch reimplementation of COUNT Forest (Pham et al., ICCV 2015), evaluated on the Mall dataset.</p>
+<div class="cf-team"><span><i>NB</i>Naman Bhalawat</span><span><i>SZ</i>Siddhant Zawar</span><span><i>JC</i>Jalaj Chaudhary</span></div>
+<div class="cf-cta">
+<p><a class="cf-btn cf-btn--primary" href="#9-video-demonstration-and-screen-recording-of-ppt">Watch the demo</a>
+<a class="cf-btn" href="#8-link-to-ppt-file-on-github">Slides (PPT)</a>
+<a class="cf-btn" href="https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/count_forest_full.ipynb">Code on GitHub</a>
+<a class="cf-btn" href="setup/">Setup &amp; how to run</a></p>
+</div>
+</div>
+<div class="cf-hero__art"><img src="assets/img/hero_density.svg" alt="Head dots on the left become a smooth density map on the right; the map sums to the number of people"></div>
+</div>
+<div class="cf-stats">
+<div class="cf-stat"><span class="num">4.41</span><span class="lbl">Test MAE, best variant<br>(paper: 2.50)</span></div>
+<div class="cf-stat"><span class="num">0.84</span><span class="lbl">Correlation of predicted<br>and true counts</span></div>
+<div class="cf-stat"><span class="num">1.73 <small>MB</small></span><span class="lbl">Model size<br>(32 trees)</span></div>
+<div class="cf-stat"><span class="num">1.8×</span><span class="lbl">Speed-up from<br>forest permutation</span></div>
+<div class="cf-stat"><span class="num">CPU</span><span class="lbl">No GPU: forest written<br>from scratch in NumPy</span></div>
+</div>
+
+<p class="cf-toc-title">What is in this report</p>
+
+<div class="cf-toc">
+<a class="cf-card" href="#1-introduction"><span class="n">1</span><span><b>Introduction</b><span class="d">Why count crowds, and what we add</span></span></a>
+<a class="cf-card" href="#2-brief-literature-review"><span class="n">2</span><span><b>Literature review</b><span class="d">From regression to density forests</span></span></a>
+<a class="cf-card" href="#3-methodology"><span class="n">3</span><span><b>Methodology</b><span class="d">Patches, two-layer trees, density maps</span></span></a>
+<a class="cf-card" href="#4-experimental-setup"><span class="n">4</span><span><b>Experimental setup</b><span class="d">Mall dataset, metrics, baselines</span></span></a>
+<a class="cf-card" href="#5-results"><span class="n">5</span><span><b>Results</b><span class="d">Accuracy, ablations, heat maps, failures</span></span></a>
+<a class="cf-card" href="#6-conclusion"><span class="n">6</span><span><b>Conclusion</b><span class="d">What we learned and what is next</span></span></a>
+<a class="cf-card" href="#7-references"><span class="n">7</span><span><b>References</b><span class="d">Papers and the dataset</span></span></a>
+<a class="cf-card" href="#8-link-to-ppt-file-on-github"><span class="n">8</span><span><b>PPT on GitHub</b><span class="d">Presentation slides on GitHub</span></span></a>
+<a class="cf-card" href="#9-video-demonstration-and-screen-recording-of-ppt"><span class="n">9</span><span><b>Video</b><span class="d">Demo clip and the recorded talk</span></span></a>
+</div>
+
+<h2 id="1-introduction">1. Introduction<a class="headerlink" href="#1-introduction" title="Permanent link">&para;</a></h2>
+<h3 id="11-motivation">1.1 Motivation<a class="headerlink" href="#11-motivation" title="Permanent link">&para;</a></h3>
+<p>Knowing how many people are in a place at a given time matters for safety, staffing and planning, and counting them by hand does not scale to continuous video. Detecting each person and counting the detections breaks down in crowds, where people are small, overlap and hide each other. Density estimation avoids detection: a model predicts a <strong>density map</strong> whose total over any region is the number of people in it.</p>
+<p>COUNT Forest (Pham et al., ICCV 2015) is one such method. It uses a random forest, so the model is small (1.7 MB here) and runs on a CPU. Its density maps also give a heat map and a stationary-time estimate.</p>
+<h3 id="12-applications">1.2 Applications<a class="headerlink" href="#12-applications" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Crowd monitoring.</strong> The occupancy of a hall, street or mall from a fixed camera, for example to raise an alert when the count passes a limit.</li>
+<li><strong>Retail and facility planning.</strong> Where people gather and how long they stay, from the heat map and stationary-time maps shown in <a href="#53-qualitative-results-and-applications">section 5.3</a>.</li>
+<li><strong>Surveillance and traffic.</strong> The paper lists traffic control, surveillance, industrial inspection and medical image analysis as uses of counting, and names crowd behaviour in public spaces such as train stations and streets.</li>
+<li><strong>Other objects.</strong> Density estimation learned from dot annotations alone was first shown on counting cells in microscope images [6].</li>
+</ul>
+<h3 id="13-problem-statement">1.3 Problem statement<a class="headerlink" href="#13-problem-statement" title="Permanent link">&para;</a></h3>
+<p>The setting is a fixed camera with a known perspective map and region of interest (ROI), plus training frames in which every head is marked by one dot. For each new frame, the task is to estimate:</p>
+<ol>
+<li>the number of people inside the ROI;</li>
+<li>a density map <span class="arithmatex">\(D(x) \ge 0\)</span> whose sum over any region is the number of people there.</li>
+</ol>
+<p>The count of frame <span class="arithmatex">\(t\)</span> is the sum of <span class="arithmatex">\(D_t(x)\)</span> over the ROI. Quality is measured by the mean absolute error (MAE), the mean squared error (MSE) and the mean deviation error (MDE) over the test frames (<a href="#41-dataset-protocol-and-metrics">section 4.1</a>). The method should run on a CPU with a small model.</p>
+<h3 id="14-contributions">1.4 Contributions<a class="headerlink" href="#14-contributions" title="Permanent link">&para;</a></h3>
+<p>We reimplemented COUNT Forest from the paper's description, then trained and tested it on the Mall dataset with the paper's split (frames 1–800 for training, 801–2000 for testing). The project contributes:</p>
+<ul>
+<li><strong>A complete implementation in Python.</strong> It covers the feature channels, two-layer tree training, the leaf model, density estimation, the crowdedness prior and forest permutation. Its fast tree-routing estimator matches a straightforward version to within <span class="arithmatex">\(10^{-9}\)</span> and is about seven times faster (0.38 s against 2.9 s for one frame, one run).</li>
+<li><strong>Test results for four variants of the method</strong>, with the paper's own figures quoted for reference (<a href="#51-quantitative-results-on-the-test-set">section 5.1</a>).</li>
+<li><strong>Ablation studies on a validation block</strong>, with an estimate of the noise between two random seeds (<a href="#52-ablations">section 5.2</a>).</li>
+<li><strong>Applications and failure analysis:</strong> a heat-map and stationary-time application, a demo video (<a href="#53-qualitative-results-and-applications">section 5.3</a>) and an analysis of failure cases (<a href="#55-failure-cases">section 5.5</a>).</li>
+</ul>
+<hr />
+<h2 id="2-brief-literature-review">2. Brief literature review<a class="headerlink" href="#2-brief-literature-review" title="Permanent link">&para;</a></h2>
+<p><strong>Counting by regression.</strong> Early crowd counting avoided detecting people. Chan, Liang and Vasconcelos [5] segment the crowd into components of homogeneous motion and regress the count from their features, without segmenting or tracking individuals. Their pedestrian dataset (UCSD, 2000 frames) is still a standard benchmark. Chen et al. [2] introduced the Mall dataset together with a feature-mining approach to localised counting, and cumulative attribute learning [3] was applied to counting as well.</p>
+<p><strong>Density estimation.</strong> Lempitsky and Zisserman [6] cast counting as estimating an image density whose integral over any region gives the count, learned from dot annotations only. Fiaschi et al. [7] predict that density with a regression forest that maps feature patches to patches of target density and averages the overlapping predictions. Storing dense density patches in the leaves takes a lot of memory. COUNT Forest [1] differs in four ways:</p>
+<ul>
+<li>its leaves store the number and the positions of the heads in a patch instead;</li>
+<li>each tree is built with two split layers, coarse then fine;</li>
+<li>it adds a crowdedness prior and a forest-reduction scheme based on permuting trees;</li>
+<li>it offers a semi-automatic way to train a scene-specific model.</li>
+</ul>
+<p>The paper reports state-of-the-art results on Mall and UCSD at the time of publication.</p>
+<p><strong>Deep learning.</strong> Since 2016, convolutional networks have dominated the benchmarks. The multi-column network of Zhang et al. [8] maps an image to a density map with filters of several sizes to cope with changing head size. CSRNet [9] uses a convolutional front end with a dilated back end in place of pooling. A survey of the field is given in [4]. COUNT Forest is a classical, non-deep method with a small model that runs on a CPU. This project reimplements the forest method only and, by its scope, does not compare it with these methods.</p>
+<hr />
+<h2 id="3-methodology">3. Methodology<a class="headerlink" href="#3-methodology" title="Permanent link">&para;</a></h2>
+<p>COUNT Forest predicts, for every 13×13 image patch, where the heads near that patch are, then sums Gaussians placed at those positions into a density map. The count of a frame is the sum of its density map inside the ROI. Figure 1 shows the pipeline. The equation numbers in the figure are those of the paper, and the sections below follow the same order.</p>
+<figure>
+<p><img alt="Pipeline of the implementation" src="assets/img/fig1_pipeline.png" /></p>
+<figcaption>Figure 1. Pipeline. Training (top) uses frames 1–800 with one dot per head. Testing (bottom) processes frames 801–2000 in order. The blue boxes are the forest and its use; the two dashed boxes are the optional additions, the crowdedness prior and forest permutation.</figcaption>
+</figure>
+<h3 id="31-density-map-and-patch-labels">3.1 Density map and patch labels<a class="headerlink" href="#31-density-map-and-patch-labels" title="Permanent link">&para;</a></h3>
+<p>Let <span class="arithmatex">\(P_t\)</span> be the annotated head positions of frame <span class="arithmatex">\(t\)</span>. The ground-truth density puts a normalised Gaussian (<span class="arithmatex">\(\sigma = 2.5\)</span> px) on every head, so it sums to the head count:</p>
+<div class="arithmatex">\[
+D^{gt}_t(x)=\sum_{p\in P_t}\mathcal{N}(x;p,\sigma^2 I),\qquad
+\mathcal{N}(x;\mu,\sigma^2 I)=\frac{1}{2\pi\sigma^2}\exp\Big(-\frac{\lVert x-\mu\rVert^2}{2\sigma^2}\Big)
+\]</div>
+<p>A training sample is a patch with centre <span class="arithmatex">\(c\)</span>, a feature vector (<a href="#32-patch-features">section 3.2</a>) and a label. The label is the set of displacement vectors from <span class="arithmatex">\(c\)</span> to every head closer than <span class="arithmatex">\(R = 32\)</span> px, and its size <span class="arithmatex">\(K\)</span> is the number of those heads:</p>
+<div class="arithmatex">\[
+L(c)=\{\,p-c\;:\;p\in P_t,\ \lVert p-c\rVert&lt;R\,\},\qquad K=|L(c)|
+\]</div>
+<p>Most patches have no head in range: in the tuning pool, 78% of the sampled training patches have <span class="arithmatex">\(K = 0\)</span>. Figure 2 shows a frame, its density and one label.</p>
+<p><figure markdown>
+<img alt="A frame with annotated heads, its ground-truth density, and the label of one patch" src="assets/img/fig2_density_label.png" /></p>
+<figcaption>Figure 2. Left: frame 351 with its 36 annotated heads (red) and the ROI (yellow). Centre: the ground-truth density (σ = 2.5 px), which sums to 36.0. Right: one 13×13 patch (cyan) and its label; the heads inside the dashed circle of radius R = 32 px give K = 3, drawn as the red displacement vectors from the patch centre.</figcaption>
+</figure>
+<h3 id="32-patch-features">3.2 Patch features<a class="headerlink" href="#32-patch-features" title="Permanent link">&para;</a></h3>
+<p>Every frame is turned into 15 channels:</p>
+<ul>
+<li><strong>Three simple channels:</strong> the grey image, the foreground mask of an OpenCV MOG2 background model, and the absolute difference to the previous frame.</li>
+<li><strong>Twelve multi-scale channels,</strong> computed at three scales <span class="arithmatex">\(s = 0.8, 1.6, 3.2\)</span>:<ul>
+<li>the Gaussian gradient magnitude;</li>
+<li>the Laplacian of Gaussian (LoG);</li>
+<li>the two eigenvalues of the structure tensor, whose derivatives <span class="arithmatex">\(I_x, I_y\)</span> are taken at scale <span class="arithmatex">\(s\)</span> and whose products are smoothed at scale <span class="arithmatex">\(2s\)</span>.</li>
+</ul>
+</li>
+</ul>
+<div class="arithmatex">\[
+C_1=I/255,\qquad C_2=\mathrm{FG}_{\mathrm{MOG2}},\qquad C_3=|I_t-I_{t-1}|
+\]</div>
+<div class="arithmatex">\[
+C^{\mathrm{grad}}_s=\lVert\nabla(G_s*I)\rVert,\qquad
+C^{\mathrm{LoG}}_s=\Delta(G_s*I),\qquad s\in\{0.8,\,1.6,\,3.2\}
+\]</div>
+<div class="arithmatex">\[
+J_s=G_{2s}*\begin{pmatrix}I_x^2&amp;I_xI_y\\ I_xI_y&amp;I_y^2\end{pmatrix},\qquad
+\lambda_{\pm,s}=\frac{J_{xx}+J_{yy}}{2}\pm\sqrt{\Big(\frac{J_{xx}-J_{yy}}{2}\Big)^2+J_{xy}^2}
+\]</div>
+<p>Each channel is multiplied by the perspective map <span class="arithmatex">\(M(x)\)</span> of the scene. The feature of a patch is its 13×13 window in all 15 channels, 2535 values:</p>
+<div class="arithmatex">\[
+f(c)=\big(M(x)\,C_k(x)\big)_{k=1,\dots,15;\;x\in W(c)}\ \in\ \mathbb{R}^{15\cdot13\cdot13=2535}
+\]</div>
+<p>The background model and the temporal difference need the frames in order, so channels are computed by streaming the video from frame 1. Figure 3 shows the 15 channels for one frame. In the ablations (<a href="#52-ablations">section 5.2</a>), removing the temporal channels, the structure-tensor channels or the two coarser scales each costs more than the seed noise.</p>
+<figure>
+<p><img alt="The 15 feature channels of frame 751" src="assets/img/fig3_channels.png" /></p>
+<figcaption>Figure 3. The 15 channels of frame 751 inside the ROI, each stretched to its 1st to 99th percentile for display. Names follow the code: st_l1 and st_l2 are the larger and the smaller structure-tensor eigenvalue, and the number after @ is the scale.</figcaption>
+</figure>
+<h3 id="33-tree-training-two-split-layers">3.3 Tree training: two split layers<a class="headerlink" href="#33-tree-training-two-split-layers" title="Permanent link">&para;</a></h3>
+<p>Each tree is trained on a random sample of 100,000 patches from the training pool. At a node holding the sample set <span class="arithmatex">\(S\)</span>, 256 candidate splits are drawn at random. Each candidate is a feature index <span class="arithmatex">\(j\)</span> and a threshold <span class="arithmatex">\(\theta\)</span>, equal to the value of that feature in a random sample of the node. A candidate sends the samples with <span class="arithmatex">\(f[j] &lt; \theta\)</span> to the left child <span class="arithmatex">\(S_L\)</span> and the rest to <span class="arithmatex">\(S_R\)</span>. It is discarded if either child has fewer than 5 samples. The best remaining candidate is used; what "best" means depends on the depth.</p>
+<p><strong>Upper layer</strong> (the paper's Eq. 5). This criterion applies below depth 8 at nodes of at least 40 samples; smaller nodes use the lower criterion. The label of a sample is turned into a soft 2-D histogram of its head positions over 5×5 bins covering <span class="arithmatex">\([-R, R]^2\)</span>. A split minimises the variance of these histograms inside the two children:</p>
+<div class="arithmatex">\[
+H_i(b)=\sum_{v\in L_i}\exp\Big(-\frac{\lVert v-m_b\rVert^2}{2\sigma_H^2}\Big),\qquad
+\min_{(j,\theta)}\ \sum_{c\in\{L,R\}}\ \sum_{i\in S_c}\lVert H_i-\bar H_c\rVert^2,\quad
+\bar H_c=\frac{1}{|S_c|}\sum_{i\in S_c}H_i
+\]</div>
+<p>Here <span class="arithmatex">\(m_b\)</span> is the centre of bin <span class="arithmatex">\(b\)</span> and <span class="arithmatex">\(\sigma_H\)</span> is one bin width (<span class="arithmatex">\(2R/5 = 12.8\)</span> px). This layer groups patches whose heads lie in similar places.</p>
+<p><strong>Lower layer</strong> (the paper's Eq. 6). It applies at the remaining depths. A split minimises the size-weighted entropy of the label sizes <span class="arithmatex">\(K\)</span> in the two children, which makes each leaf agree on how many heads there are:</p>
+<div class="arithmatex">\[
+\min_{(j,\theta)}\ |S_L|\,H(K\mid S_L)+|S_R|\,H(K\mid S_R),\qquad H(K\mid S)=-\sum_k p_S(k)\log_2 p_S(k)
+\]</div>
+<p>A node becomes a leaf in any of these cases:</p>
+<ul>
+<li>it is at depth 11;</li>
+<li>it has fewer than 20 samples;</li>
+<li>all its samples have the same <span class="arithmatex">\(K\)</span>;</li>
+<li>no candidate split is valid.</li>
+</ul>
+<h3 id="34-leaf-model">3.4 Leaf model<a class="headerlink" href="#34-leaf-model" title="Permanent link">&para;</a></h3>
+<p>A leaf <span class="arithmatex">\(\ell\)</span> stores the most common label size <span class="arithmatex">\(K^*_\ell\)</span> among its samples (the smaller <span class="arithmatex">\(K\)</span> if there is a tie). It also stores <span class="arithmatex">\(K^*_\ell\)</span> cluster centres, found by K-means on the displacement vectors of the samples that have that label size. A leaf with <span class="arithmatex">\(K^* = 0\)</span> stores nothing and votes for no head.</p>
+<div class="arithmatex">\[
+K^*_\ell=\arg\max_k\,\big|\{i\in\ell:\ K_i=k\}\big|,\qquad
+\{\mu_{\ell 1},\dots,\mu_{\ell K^*_\ell}\}=\mathrm{KMeans}_{K^*_\ell}\big(\{v\in L_i:\ i\in\ell,\ K_i=K^*_\ell\}\big)
+\]</div>
+<h3 id="35-density-estimation">3.5 Density estimation<a class="headerlink" href="#35-density-estimation" title="Permanent link">&para;</a></h3>
+<p>At test time a patch is taken every 3 px (29,908 patches per frame). The density is built in three steps:</p>
+<ol>
+<li><strong>Per tree:</strong> each patch is routed through the trees. In every tree, its leaf places <span class="arithmatex">\(K^*\)</span> Gaussians at the stored displacements from the patch centre.</li>
+<li><strong>Per patch:</strong> the Gaussians of the trees are averaged to give the density <span class="arithmatex">\(D_i\)</span> of the patch on its own 13×13 window <span class="arithmatex">\(W_i\)</span> (the paper's Eq. 7 and 8).</li>
+<li><strong>Per pixel:</strong> the densities of all patches that cover a pixel are averaged (Eq. 9), and the count is the sum over the ROI.</li>
+</ol>
+<div class="arithmatex">\[
+D_i(x)=\frac{1}{|T|}\sum_{T_j\in T}\ \sum_{k=1}^{K^*_j(i)}\mathcal{N}\big(x;\,c_i+\mu_{jk}(i),\,\sigma^2 I\big),\quad x\in W_i
+\]</div>
+<div class="arithmatex">\[
+D(x)=\frac{1}{|\mathcal{P}(x)|}\sum_{i\in\mathcal{P}(x)}D_i(x),\qquad \hat N=\sum_{x\in\mathrm{ROI}}D(x)
+\]</div>
+<p>Here <span class="arithmatex">\(K^*_j(i)\)</span> and <span class="arithmatex">\(\mu_{jk}(i)\)</span> are the values stored in the leaf of tree <span class="arithmatex">\(T_j\)</span> that patch <span class="arithmatex">\(i\)</span> reaches, and <span class="arithmatex">\(\mathcal{P}(x)\)</span> is the set of patches whose window contains <span class="arithmatex">\(x\)</span>. A faster routine reads the split features straight from the channel stack. It gives the same density as the direct version to within <span class="arithmatex">\(10^{-9}\)</span> and is about seven times faster.</p>
+<h3 id="36-crowdedness-prior">3.6 Crowdedness prior<a class="headerlink" href="#36-crowdedness-prior" title="Permanent link">&para;</a></h3>
+<p>Two forests are trained:</p>
+<ul>
+<li><span class="arithmatex">\(F_c\)</span> on crowded patches (<span class="arithmatex">\(K\)</span> between <span class="arithmatex">\(N/3\)</span> and <span class="arithmatex">\(N\)</span>);</li>
+<li><span class="arithmatex">\(F_n\)</span> on non-crowded patches (<span class="arithmatex">\(K\)</span> up to <span class="arithmatex">\(2N/3\)</span>).</li>
+</ul>
+<p>A patch of frame <span class="arithmatex">\(t\)</span> uses <span class="arithmatex">\(F_c\)</span> if the density that the previous frame placed within <span class="arithmatex">\(R\)</span> pixels of it exceeds <span class="arithmatex">\(N/2\)</span> heads, and <span class="arithmatex">\(F_n\)</span> otherwise. The first frame uses the plain forest. We use <span class="arithmatex">\(N = 6\)</span>; the paper takes <span class="arithmatex">\(N\)</span> as the largest label size, which is 9 on this data. Only one forest runs per patch, so the running time does not change, but two forests are stored (3.19 MB against 1.73 MB).</p>
+<div class="arithmatex">\[
+F(i,t)=\begin{cases}F_{\mathrm{c}}&amp;\text{if }\sum_{\lVert x-c_i\rVert&lt;R}D_{t-1}(x)&gt;N/2\\[2pt] F_{\mathrm{n}}&amp;\text{otherwise}\end{cases}
+\]</div>
+<h3 id="37-forest-permutation">3.7 Forest permutation<a class="headerlink" href="#37-forest-permutation" title="Permanent link">&para;</a></h3>
+<p>The 32 trees are split into 4 sub-forests <span class="arithmatex">\(T_0\)</span> to <span class="arithmatex">\(T_3\)</span> of 8 trees. A patch at grid position <span class="arithmatex">\((g_x, g_y)\)</span> is predicted by one sub-forest <span class="arithmatex">\(s\)</span> only, so any 2×2 block of neighbouring patches uses all four. Each patch costs a quarter of the tree evaluations, while each pixel still averages over patches from the whole forest.</p>
+<div class="arithmatex">\[
+s(g_x,g_y)=2\,(g_y \bmod 2)+(g_x \bmod 2),\qquad D_i \text{ is computed with } T_{s(i)} \text{ in place of } T
+\]</div>
+<h3 id="38-heat-map-and-stationary-time">3.8 Heat map and stationary time<a class="headerlink" href="#38-heat-map-and-stationary-time" title="Permanent link">&para;</a></h3>
+<p>The estimated density maps <span class="arithmatex">\(D_t\)</span> of the test video give the paper's second application without further training:</p>
+<ul>
+<li><strong>Occupied pixel:</strong> a pixel is occupied in frame <span class="arithmatex">\(t\)</span> if the density within 8 px of it exceeds a threshold <span class="arithmatex">\(\tau\)</span>. Taking the maximum over that small disk allows for local movement.</li>
+<li><strong>Stay:</strong> a run of consecutive occupied frames.</li>
+<li><strong>Long stay:</strong> a stay of at least 10 s (20 frames at 2 frames per second).</li>
+</ul>
+<p>The outputs are the heat map <span class="arithmatex">\(H\)</span>, the fraction of time occupied <span class="arithmatex">\(A\)</span>, and the fraction of time spent in long stays <span class="arithmatex">\(L\)</span>:</p>
+<div class="arithmatex">\[
+O_t(x)=\mathbb{1}\Big[\max_{\lVert y-x\rVert\le 8}D_t(y)&gt;\tau\Big],\quad
+H(x)=\frac1T\sum_t D_t(x),\quad
+A(x)=\frac1T\sum_t O_t(x),\quad
+L(x)=\frac1T\sum_{e\ni x,\ |e|\ge 20}|e|
+\]</div>
+<p>Here <span class="arithmatex">\(e\)</span> runs over the stays at <span class="arithmatex">\(x\)</span> and <span class="arithmatex">\(|e|\)</span> is a stay's length in frames.</p>
+<h3 id="39-settings-the-paper-leaves-open">3.9 Settings the paper leaves open<a class="headerlink" href="#39-settings-the-paper-leaves-open" title="Permanent link">&para;</a></h3>
+<p>The paper fixes the forest's size and the feature set but leaves several settings open. Where it is silent we chose a value, and we tuned the important ones on validation frames (Mall frames 701–800, training on 1–700). The most consequential is the label radius <span class="arithmatex">\(R\)</span>, which the paper does not give: across <span class="arithmatex">\(R\)</span> = 12 to 40 px the validation MAE ranges from 2.8 to 9.2 (<a href="#52-ablations">section 5.2</a>).</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Paper</th>
+<th>This implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trees, depth, upper-layer depth, minimum node size</td>
+<td>32, 11, 8, 20</td>
+<td>the same</td>
+</tr>
+<tr>
+<td>Patch size</td>
+<td>13×13</td>
+<td>the same</td>
+</tr>
+<tr>
+<td>Training patches per frame</td>
+<td>1000</td>
+<td>300 (to fit in 7 GB of memory)</td>
+</tr>
+<tr>
+<td>Label radius <span class="arithmatex">\(R\)</span></td>
+<td>not given</td>
+<td>32 px</td>
+</tr>
+<tr>
+<td>Head-position histogram (upper layer)</td>
+<td>a 2-D histogram</td>
+<td>5×5 bins, each head spread by a Gaussian one bin wide</td>
+</tr>
+<tr>
+<td>Split candidates per node</td>
+<td>not given</td>
+<td>256 random (feature, threshold) pairs; the best is used</td>
+</tr>
+<tr>
+<td>Smallest allowed child; smallest node for the upper layer</td>
+<td>not given</td>
+<td>5 samples; 40 samples</td>
+</tr>
+<tr>
+<td>Training sample of a tree</td>
+<td>not described</td>
+<td>a random 100,000 of the pooled patches (210,000 pooled when tuning, 240,000 for the final model)</td>
+</tr>
+<tr>
+<td>Perspective weighting</td>
+<td>features × (perspective map)²</td>
+<td>features × perspective map (Mall's map is already an area scale; compared in section 5.2)</td>
+</tr>
+<tr>
+<td>Background subtraction</td>
+<td>"the background subtraction result"</td>
+<td>OpenCV MOG2, history 500, median-filtered mask</td>
+</tr>
+<tr>
+<td>Patch grid at test time</td>
+<td>not given</td>
+<td>one patch every 3 px (29,908 per frame)</td>
+</tr>
+<tr>
+<td>Prior threshold <span class="arithmatex">\(N\)</span></td>
+<td>max label size (9 here)</td>
+<td>6</td>
+</tr>
+<tr>
+<td>First frame under the prior</td>
+<td>not stated</td>
+<td>the plain forest</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-experimental-setup">4. Experimental setup<a class="headerlink" href="#4-experimental-setup" title="Permanent link">&para;</a></h2>
+<h3 id="41-dataset-protocol-and-metrics">4.1 Dataset, protocol and metrics<a class="headerlink" href="#41-dataset-protocol-and-metrics" title="Permanent link">&para;</a></h3>
+<p>All results are on the Mall dataset, with the same split as the paper: the first 800 frames for training and the remaining 1200 for testing.</p>
+<ul>
+<li><strong>Dataset.</strong> 2000 frames of 640×480 at 2 frames per second, from a shopping mall camera (Chen et al. [2]). Between 13 and 53 people are inside the ROI in every frame. Heads are annotated as dots, and the dataset provides the ROI and a perspective map.</li>
+<li><strong>Tuning protocol.</strong> Settings were chosen by training on frames 1–700 and scoring frames 701–800. We used a contiguous block because neighbouring frames are almost identical. The final model was then trained on all 800 training frames. The test frames were run once, after the settings were fixed.</li>
+<li><strong>Metrics.</strong> For true counts <span class="arithmatex">\(\kappa\)</span> and estimates <span class="arithmatex">\(\hat\kappa\)</span> over the evaluated frames, the estimate of a frame is the sum of its density map inside the ROI, and:</li>
+</ul>
+<div class="arithmatex">\[
+\mathrm{MAE}=\overline{|\kappa-\hat\kappa|},\qquad
+\mathrm{MSE}=\overline{(\kappa-\hat\kappa)^2}\ \ (\text{no square root, as in the paper}),\qquad
+\mathrm{MDE}=\overline{|\kappa-\hat\kappa|/\kappa}
+\]</div>
+<h3 id="42-baseline-algorithms">4.2 Baseline algorithms<a class="headerlink" href="#42-baseline-algorithms" title="Permanent link">&para;</a></h3>
+<p>As decided for this project, COUNT Forest is the only method implemented, and it is not compared with other counting methods. The baseline for the experiments is therefore the <strong>plain COUNT Forest (CF)</strong>: 32 trees with the two split layers and no extra component.</p>
+<ul>
+<li><strong>Variants.</strong> Three variants add the paper's two components to the baseline: CF + forest permutation, CF + crowdedness prior, and both together.</li>
+<li><strong>Ablations.</strong> The ablations in section 5.2 change one setting of the plain forest at a time.</li>
+<li><strong>Reference point.</strong> The paper's own result for its full method on Mall (MAE 2.50, MSE 10.0, MDE 0.080, its Table 2) is quoted for reference and was not re-run.</li>
+</ul>
+<h3 id="43-implementation-platform">4.3 Implementation platform<a class="headerlink" href="#43-implementation-platform" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Language &amp; libraries</strong></td>
+<td>Python 3.13, NumPy 2.5, SciPy 1.18, OpenCV 5.0 (MOG2 and filtering), joblib (parallel tree training, model storage), Matplotlib</td>
+</tr>
+<tr>
+<td><strong>From scratch</strong></td>
+<td>The forest, its training and the density estimator use no random-forest or deep-learning library</td>
+</tr>
+<tr>
+<td><strong>Hardware</strong></td>
+<td>One machine, 2 CPU cores, 7 GB of memory</td>
+</tr>
+<tr>
+<td><strong>Training cost</strong></td>
+<td>Training pool for 800 frames: 192 s. Training 32 trees: 100 s</td>
+</tr>
+<tr>
+<td><strong>Model size</strong></td>
+<td>1.73 MB (the paper: 1.5 MB)</td>
+</tr>
+<tr>
+<td><strong>Inference cost</strong></td>
+<td>360 ms per frame (plain forest), 195 ms per frame (forest permutation), plus about 190 ms per frame of channel extraction</td>
+</tr>
+<tr>
+<td><strong>Code</strong></td>
+<td>One Jupyter notebook, <a href="https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/count_forest_full.ipynb"><code>count_forest_full.ipynb</code></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-results">5. Results<a class="headerlink" href="#5-results" title="Permanent link">&para;</a></h2>
+<h3 id="51-quantitative-results-on-the-test-set">5.1 Quantitative results on the test set<a class="headerlink" href="#51-quantitative-results-on-the-test-set" title="Permanent link">&para;</a></h3>
+<p>On the 1200 test frames (801–2000), the four estimator variants reach MAE 4.41 to 4.46, against 2.50 for the full method in the paper. Every variant counts too low by about 13%.</p>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>MAE</th>
+<th>MSE</th>
+<th>MDE</th>
+<th>Trees per patch</th>
+<th>Model size (MB)</th>
+<th>Estimation (ms/frame)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>COUNT Forest (CF)</td>
+<td>4.438</td>
+<td>27.71</td>
+<td>0.137</td>
+<td>32</td>
+<td>1.73</td>
+<td>360</td>
+</tr>
+<tr>
+<td>CF + forest permutation</td>
+<td>4.460</td>
+<td>27.91</td>
+<td>0.137</td>
+<td>8</td>
+<td>1.73</td>
+<td><strong>195</strong></td>
+</tr>
+<tr>
+<td>CF + crowdedness prior (N = 6)</td>
+<td><strong>4.412</strong></td>
+<td><strong>27.46</strong></td>
+<td><strong>0.136</strong></td>
+<td>32</td>
+<td>3.19</td>
+<td>367</td>
+</tr>
+<tr>
+<td>CF + prior + permutation</td>
+<td>4.451</td>
+<td>27.92</td>
+<td>0.137</td>
+<td>8</td>
+<td>3.19</td>
+<td>202</td>
+</tr>
+<tr>
+<td><em>Paper, full method (quoted, not re-run)</em></td>
+<td><em>2.50</em></td>
+<td><em>10.0</em></td>
+<td><em>0.080</em></td>
+<td></td>
+<td><em>1.5</em></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Estimation time excludes about 190 ms per frame of channel extraction.</p>
+<figure>
+<p><img alt="Test counts over time, estimated against true count, and error by crowd size" src="assets/img/fig4_test_counts.png" /></p>
+<figcaption>Figure 4. Test frames 801–2000, CF + prior (the variant with the lowest MAE): true and estimated counts over time (left), estimated against true count (centre), and mean error and MAE by sextile of the true count (right).</figcaption>
+</figure>
+<ul>
+<li><strong>The error is mostly a constant undercount.</strong> The mean predicted count is 28.1 against a true mean of 32.2. The mean error is −4.1, and the correlation between predicted and true counts is 0.84. Subtracting the mean error would leave an MAE of 2.7. This is a diagnostic computed with the test labels, not a result.</li>
+<li><strong>It grows with crowd size.</strong> The predicted-to-true ratio falls from 0.89 for the least crowded quarter of frames to 0.86 for the most crowded. All eight consecutive blocks of the test period are undercounted.</li>
+<li><strong>It is larger than on validation.</strong> On validation frames 701–800 the same forest scored MAE 3.12 with a 7% undercount.</li>
+<li><strong>Permutation and prior.</strong> Forest permutation cut estimation time from 360 to 195 ms per frame (1.8 times faster) and changed MAE by 0.02. The crowdedness prior changed MAE by −0.03 and nearly doubled the model size. Two forests that differ only in the random seed differ by 0.24 MAE on validation, so differences of 0.02 to 0.03 can't be told apart from noise.</li>
+</ul>
+<h3 id="52-ablations">5.2 Ablations<a class="headerlink" href="#52-ablations" title="Permanent link">&para;</a></h3>
+<p>All ablations train on frames 1–700 and score frames 701–800; no test frame is used. Each run changes one setting of the tuned configuration: a plain forest of 32 trees, patch stride 3, <span class="arithmatex">\(R\)</span> = 32 px, 300 training patches per frame, no prior. The true mean count of the validation block is 35.8 people.</p>
+<p>Two forests that differ only in the random seed score MAE 3.12 and 3.37, so we treat differences below about 0.25 as indistinguishable. Two runs give only a rough scale for this, not a confidence interval. The final model and the test results were fixed before these runs, and none of them was changed afterwards.</p>
+<figure>
+<p><img alt="Ablations on validation frames" src="assets/img/fig5_ablations.png" /></p>
+<figcaption>Figure 5. Ablations on validation frames 701–800, trained on frames 1–700: number of trees, patch stride (with and without forest permutation) and label radius R.</figcaption>
+</figure>
+<ul>
+<li>
+<p><strong>Trees.</strong> These are the first N trees of one forest.</p>
+<ul>
+<li>A single tree is clearly worse (MAE 3.77).</li>
+<li>With 2 to 16 trees, the MAE is 2.2 to 2.5 and the mean count is 34.8 to 35.9, close to the true 35.8.</li>
+<li>With all 32 trees, the MAE is 3.12 and the mean count 33.2.</li>
+</ul>
+<p>So more trees did not help on this block: the second sixteen lower the mean count by about two people.
+- <strong>Stride.</strong> The error is flat from stride 2 to 6 and rises at stride 8 (3.41). Cost falls from 733 ms to 175 ms per frame between stride 2 and 4. At stride 4, forest permutation gives MAE 3.00 in 72 ms, about four times faster than the stride-3 setting used for the main results (MAE 3.12, 302 ms).
+- <strong>Label radius <span class="arithmatex">\(R\)</span>.</strong> <span class="arithmatex">\(R\)</span> = 12 undercounts severely (mean count 26.6), and <span class="arithmatex">\(R\)</span> = 18 overcounts (38.7, MAE 3.93). <span class="arithmatex">\(R\)</span> = 24 has the lowest MAE of the sweep (2.84, mean count 36.5), beating our choice of 32 by 0.29, about the size of the seed gap.</p>
+</li>
+</ul>
+<p><strong>Retraining ablations.</strong> These runs train a new forest on frames 1–700 with one change each.</p>
+<table>
+<thead>
+<tr>
+<th>Change from the base forest</th>
+<th>MAE</th>
+<th>MSE</th>
+<th>MDE</th>
+<th>Mean count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None (base)</td>
+<td>3.12</td>
+<td>13.5</td>
+<td>0.089</td>
+<td>33.2</td>
+</tr>
+<tr>
+<td>Another random seed</td>
+<td>3.37</td>
+<td>15.8</td>
+<td>0.096</td>
+<td>32.9</td>
+</tr>
+<tr>
+<td>Lower split layer (label-size entropy) at every depth</td>
+<td>2.87</td>
+<td>13.1</td>
+<td>0.079</td>
+<td>37.4</td>
+</tr>
+<tr>
+<td>Upper split layer (position variance) at every depth</td>
+<td>8.31</td>
+<td>75.8</td>
+<td>0.236</td>
+<td>27.5</td>
+</tr>
+<tr>
+<td>Without the two temporal channels (13 channels)</td>
+<td>6.32</td>
+<td>54.4</td>
+<td>0.165</td>
+<td>29.5</td>
+</tr>
+<tr>
+<td>Without the six structure-tensor channels (9 channels)</td>
+<td>8.67</td>
+<td>82.9</td>
+<td>0.245</td>
+<td>27.1</td>
+</tr>
+<tr>
+<td>Finest scale only (7 channels)</td>
+<td>5.34</td>
+<td>35.1</td>
+<td>0.153</td>
+<td>30.6</td>
+</tr>
+<tr>
+<td>Channels × (perspective map)², as in the paper</td>
+<td>2.92</td>
+<td>13.2</td>
+<td>0.083</td>
+<td>37.6</td>
+</tr>
+<tr>
+<td>100 training patches per frame instead of 300</td>
+<td>2.68</td>
+<td>10.6</td>
+<td>0.076</td>
+<td>34.0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Split layers.</strong> Using only the label-size entropy criterion scores 2.87, no worse than the paper's two-layer design once the noise is allowed for. So this block gives no support for the position-variance upper layer. Using the position-variance criterion at every depth is much worse (8.31).</li>
+<li><strong>Feature channels.</strong> Every group removed costs far more than the noise. All three reduced feature sets also count lower (27 to 31 people against a true 35.8).</li>
+<li><strong>Perspective weighting.</strong> The squared perspective map scores 2.92 against 3.12, a difference inside the noise. The squared version counts about 4 people more.</li>
+<li><strong>Training patches.</strong> 100 patches per frame score 2.68, no worse than 300.</li>
+</ul>
+<p>Several variants score 0.2 to 0.9 below the base MAE: 2 to 16 trees, the lower layer alone, <span class="arithmatex">\(R\)</span> = 24, squared perspective weighting, and 100 patches per frame. Each of them also counts more people than the base forest. That fits the test-set finding that most of the error is the overall level of the count. But each comparison is one run on 100 neighbouring frames, so none of them is a tuned result, and none was applied to the final model.</p>
+<h3 id="53-qualitative-results-and-applications">5.3 Qualitative results and applications<a class="headerlink" href="#53-qualitative-results-and-applications" title="Permanent link">&para;</a></h3>
+<p><strong>Density maps.</strong> Figure 6 shows the estimated density on four test frames.</p>
+<ul>
+<li>Isolated people get compact peaks at the head.</li>
+<li>Where people stand close together, as in the upper left, the density is a broader blob.</li>
+<li>The group sitting on the bench by the palm planter gets weak density.</li>
+</ul>
+<p>All four frames are counted too low (estimated 15.5 to 24.1 against a true 21 to 31).</p>
+<figure>
+<p><img alt="Estimated density on four test frames" src="assets/img/fig6_density_examples.png" /></p>
+<figcaption>Figure 6. Four test frames, same variant as Figure 4. Top: the estimated density drawn where it exceeds 10% of the frame's peak, with the annotated heads as white circles. Bottom: the estimated density map.</figcaption>
+</figure>
+<p><strong>Heat map and stationary time.</strong> The density maps of the test video give a heat map and a stationary-time estimate (the paper's second application) with no further training.</p>
+<figure>
+<p><img alt="Heat map, occupancy and long-stay maps from the estimated density and from the annotations" src="assets/img/fig7_heatmaps.png" /></p>
+<figcaption>Figure 7. Maps from the CF + permutation density maps of the 1200 test frames (top) and from the annotated heads (bottom): mean density, fraction of time occupied, and fraction of time spent in stays of at least 10 s.</figcaption>
+</figure>
+<ul>
+<li><strong>Method.</strong> The definitions are in <a href="#38-heat-map-and-stationary-time">section 3.8</a>. The threshold for the estimated maps (0.0012, about a third of the peak density of one estimated person) is our choice. The reference maps use the same rule on a Gaussian placed on each annotated head.</li>
+<li><strong>Agreement with the annotations.</strong> After a light blur, the maps correlate with the annotation maps at:<ul>
+<li>0.66 for the mean-density heat map;</li>
+<li>0.68 for the fraction of time a pixel is occupied;</li>
+<li>0.58 for the fraction of time it spends in stays of at least 10 s.</li>
+</ul>
+</li>
+<li><strong>What the maps get right.</strong> They find the busy upper-left area of the scene and the bench seat under the palm tree's upper branches.</li>
+<li><strong>What they miss.</strong> The benches in the lower middle, where several people sit close together and partly hidden, do not appear as long stays. The model undercounts dense, occluded clusters, so those pixels never reach the threshold. The upper-left blob is also wider than in the annotations, because people far from the camera give lower, more spread-out peaks.</li>
+</ul>
+<p><strong>Demo video.</strong> <a href="assets/video/demo_counting.mp4"><code>demo_counting.mp4</code></a> shows the first 300 test frames with the density overlay, the estimated and true counts, and the count curve so far (<a href="#9-video-demonstration-and-screen-recording-of-ppt">section 9</a>).</p>
+<figure>
+<p><img alt="A frame of the demo video" src="assets/img/fig8_demo_frame.png" width="640" /></p>
+<figcaption>Figure 8. Frame 951 of the demo video: estimated and true counts, and the count curves of the first 300 test frames with the current frame marked in green.</figcaption>
+</figure>
+<h3 id="54-discussion">5.4 Discussion<a class="headerlink" href="#54-discussion" title="Permanent link">&para;</a></h3>
+<p>This reimplementation does not reach the paper's accuracy. On the 1200 test frames the MAE is 4.41 to 4.46, against 2.50 for the paper's full method (quoted from its Table 2, not re-run). The estimates follow the true counts well (correlation 0.84) but sit about 4 people, or 13%, too low. Removing that offset would leave an MAE of about 2.7, a diagnostic computed with the test labels and not a result. We have not yet tested the cause of the undercount, and this report does not claim one. Factors that could play a part, none of them tested yet:</p>
+<ul>
+<li><strong>Training patches.</strong> We used 300 per frame where the paper used 1000. The ablations found no gain from 300 over 100, which makes this a weak candidate.</li>
+<li><strong>Label radius <span class="arithmatex">\(R\)</span>.</strong> The paper does not give <span class="arithmatex">\(R\)</span>. We set it on a single 100-frame validation block, and the error depends strongly on it (2.8 to 9.2 across <span class="arithmatex">\(R\)</span> = 12 to 40).</li>
+<li><strong>Crowd level.</strong> The mean true count is 28.7 in frames 1–700, 35.8 in the validation block and 32.2 in the test frames; the final model's 800 training frames average 29.5. Whether this affects the leaf models was not examined.</li>
+<li><strong>Leaf rule.</strong> A leaf keeps its most common label size, and 62% of the final forest's leaves have a label size of zero. Whether this biases counts low was not examined.</li>
+</ul>
+<p><strong>Validation and test.</strong> The base forest scored MAE 3.12 on validation and the same kind of forest 4.44 on test, so the 100-frame validation block was too optimistic. It is a small sample of nearly identical neighbouring frames, and the noise estimate of 0.24 comes from only two forests.</p>
+<p><strong>Permutation and prior.</strong> Forest permutation made estimation 1.8 times faster for a 0.02 change in MAE. The paper reports a similar speed-up on UCSD (98 ms to 36 ms with the prior in both, its Table 4). The crowdedness prior changed MAE by −0.03, below the seed noise, and almost doubled the model size. So these experiments do not confirm an accuracy gain from it.</p>
+<h3 id="55-failure-cases">5.5 Failure cases<a class="headerlink" href="#55-failure-cases" title="Permanent link">&para;</a></h3>
+<p>The main failure is the undercount described above. Figure 9 shows the three test frames with the largest undercount (chosen at least 100 frames apart) and the one with the largest overcount. These frames were picked for their error, so they show failures and not typical frames; Figures 4 and 6 show typical ones.</p>
+<figure>
+<p><img alt="Failure cases: three large undercounts and the largest overcount" src="assets/img/fig9_failures.png" /></p>
+<figcaption>Figure 9. Failure cases, CF + forest permutation. Frames 1449, 1158 and 1809 are the largest undercounts, chosen at least 100 frames apart (−13.8, −13.2 and −12.7 people); frame 1377 is the largest overcount (+5.7). The estimated density is drawn where it exceeds 10% of the frame's peak, and the white circles are the annotated heads.</figcaption>
+</figure>
+<ul>
+<li><strong>The undercount is the main failure.</strong> 89% of the 1200 test frames are counted too low. In 11% of the frames the count is off by more than 8 people, and every one of those is an undercount. The largest overcount is 5.7 people.</li>
+<li><strong>Dense groups in the upper left.</strong> In the three undercounted frames, many annotated heads sit close together in the upper left under one broad blob of density. The frame totals fall 12.7 to 13.8 people short.</li>
+<li><strong>Seated people.</strong> In frame 1449, the group sitting on the bench by the palm planter gets almost no density, although several heads are annotated there. The stationary-time maps also miss long stays by seated groups.</li>
+<li><strong>Overcount.</strong> In frame 1377 (true 20, estimated 25.7), there are density blobs along the top edge and in the upper right, where few heads are annotated.</li>
+</ul>
+<hr />
+<h2 id="6-conclusion">6. Conclusion<a class="headerlink" href="#6-conclusion" title="Permanent link">&para;</a></h2>
+<h3 id="61-summary">6.1 Summary<a class="headerlink" href="#61-summary" title="Permanent link">&para;</a></h3>
+<p>We reimplemented COUNT Forest (Pham et al., ICCV 2015) from the paper's description and evaluated it on the Mall dataset with the paper's split. The implementation covers:</p>
+<ul>
+<li>the 15-channel patch features;</li>
+<li>the two-layer trees with their leaf model;</li>
+<li>density estimation;</li>
+<li>the crowdedness prior and forest permutation;</li>
+<li>the stationary-time application.</li>
+</ul>
+<p>On the 1200 test frames it reaches MAE 4.41 to 4.46, MSE 27.5 to 27.9 and MDE 0.136 to 0.137, against 2.50, 10.0 and 0.080 quoted for the paper's full method. The paper's accuracy was not reproduced. The estimated counts follow the true counts (correlation 0.84) but are about 13% too low.</p>
+<p>Forest permutation made density estimation 1.8 times faster with no measurable change in accuracy, and the crowdedness prior changed the error by less than the seed noise. In the ablations, the feature channels, the split criteria and the label radius <span class="arithmatex">\(R\)</span> mattered most. Heat maps and stationary-time maps built from the estimated density correlate 0.58 to 0.68 with maps built from the annotations.</p>
+<h3 id="62-future-work">6.2 Future work<a class="headerlink" href="#62-future-work" title="Permanent link">&para;</a></h3>
+<p><strong>Outside this work:</strong></p>
+<ul>
+<li>The semi-automatic training with GrabCut person masks needs the PETS2009 images, and the UCSD experiments need that dataset; neither was available here.</li>
+<li>There is no comparison with other counting methods, by the design of the project.</li>
+<li>The test frames were run once, with one training seed.</li>
+</ul>
+<p><strong>Next steps:</strong></p>
+<ul>
+<li>Test the factors listed in section 5.4 one at a time on validation (patches per frame, <span class="arithmatex">\(R\)</span> between 20 and 28 px, the leaf rule), with several seeds per setting so that the noise is measured instead of assumed.</li>
+<li>Tune on several validation blocks spread over the sequence rather than one contiguous block. Run the variants that scored better on validation on the test frames, with several seeds.</li>
+<li>Add the GrabCut-based synthetic training data once the PETS2009 images are available, and run the method on UCSD.</li>
+<li>Compare the stationary-time maps with an independent measure of how long people stayed.</li>
+</ul>
+<hr />
+<h2 id="7-references">7. References<a class="headerlink" href="#7-references" title="Permanent link">&para;</a></h2>
+<ol>
+<li>V.-Q. Pham, T. Kozakaya, O. Yamaguchi, R. Okada. <em>COUNT Forest: CO-voting Uncertain Number of Targets using Random Forest for Crowd Density Estimation.</em> ICCV 2015.</li>
+<li>K. Chen, C. C. Loy, S. Gong, T. Xiang. <em>Feature mining for localised crowd counting.</em> BMVC 2012 (the Mall dataset).</li>
+<li>K. Chen, S. Gong, T. Xiang, C. C. Loy. <em>Cumulative attribute space for age and crowd density estimation.</em> CVPR 2013.</li>
+<li>M. Wang, X. Zhou, Y. Chen. <em>A comprehensive survey of crowd density estimation and counting.</em> IET Image Processing, 2025. <a href="https://doi.org/10.1049/ipr2.13328">doi:10.1049/ipr2.13328</a></li>
+<li>A. B. Chan, Z.-S. J. Liang, N. Vasconcelos. <em>Privacy preserving crowd monitoring: Counting people without people models or tracking.</em> CVPR 2008.</li>
+<li>V. Lempitsky, A. Zisserman. <em>Learning to count objects in images.</em> NIPS 2010.</li>
+<li>L. Fiaschi, R. Nair, U. Köthe, F. A. Hamprecht. <em>Learning to count with regression forest and structured labels.</em> ICPR 2012.</li>
+<li>Y. Zhang, D. Zhou, S. Chen, S. Gao, Y. Ma. <em>Single-image crowd counting via multi-column convolutional neural network.</em> CVPR 2016.</li>
+<li>Y. Li, X. Zhang, D. Chen. <em>CSRNet: Dilated convolutional neural networks for understanding the highly congested scenes.</em> CVPR 2018.</li>
+</ol>
+<hr />
+<h2 id="8-link-to-ppt-file-on-github">8. Link to PPT file (on GitHub)<a class="headerlink" href="#8-link-to-ppt-file-on-github" title="Permanent link">&para;</a></h2>
+<p><strong>PPT:</strong> <a href="https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/ppt/COUNT_Forest_presentation.pptx">COUNT_Forest_presentation.pptx</a></p>
+<p><strong>Code:</strong> <a href="https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/count_forest_full.ipynb">count_forest_full.ipynb</a></p>
+<hr />
+<h2 id="9-video-demonstration-and-screen-recording-of-ppt">9. Video demonstration and screen recording of PPT<a class="headerlink" href="#9-video-demonstration-and-screen-recording-of-ppt" title="Permanent link">&para;</a></h2>
+<h3 id="video-demonstration">Video demonstration<a class="headerlink" href="#video-demonstration" title="Permanent link">&para;</a></h3>
+<p>The demo shows the first 300 test frames with the density overlay, the estimated and true counts, and the count curve so far.</p>
+<video controls preload="metadata" poster="assets/img/fig8_demo_frame.png" style="width:100%;max-width:640px;border-radius:8px;display:block;margin:1em auto;">
+  <source src="assets/video/demo_counting.mp4" type="video/mp4">
+  Your browser cannot play this video. <a href="assets/video/demo_counting.mp4">Download demo_counting.mp4</a>.
+</video>
+
+<p><a href="assets/video/demo_counting.mp4">Download demo_counting.mp4</a> (37 s, 5 MB)</p>
+<h3 id="screen-recording-of-the-ppt">Screen recording of the PPT<a class="headerlink" href="#screen-recording-of-the-ppt" title="Permanent link">&para;</a></h3>
+<div class="video">
+<iframe src="https://www.youtube.com/embed/1dfTp4FRBaE" title="COUNT Forest presentation" allowfullscreen></iframe>
+</div>
+
+<p><a href="https://www.youtube.com/watch?v=1dfTp4FRBaE">Watch on YouTube</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      EE5340 Video Analytics · IIT Guwahati · November 2026
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "toc.follow", "content.code.copy"], "search": "assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="javascripts/mathjax.js"></script>
+      
+        <script src="javascripts/site.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
