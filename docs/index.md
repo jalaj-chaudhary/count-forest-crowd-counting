@@ -47,7 +47,7 @@ hide:
 <a class="cf-card" href="#5-results"><span class="n">5</span><span><b>Results</b><span class="d">Accuracy, ablations, heat maps, failures</span></span></a>
 <a class="cf-card" href="#6-conclusion"><span class="n">6</span><span><b>Conclusion</b><span class="d">What we learned and what is next</span></span></a>
 <a class="cf-card" href="#7-references"><span class="n">7</span><span><b>References</b><span class="d">Papers and the dataset</span></span></a>
-<a class="cf-card" href="#8-link-to-ppt-file-on-github"><span class="n">8</span><span><b>PPT on GitHub</b><span class="d">26 slides with speaker notes</span></span></a>
+<a class="cf-card" href="#8-link-to-ppt-file-on-github"><span class="n">8</span><span><b>PPT on GitHub</b><span class="d">Presentation slides on GitHub</span></span></a>
 <a class="cf-card" href="#9-video-demonstration-and-screen-recording-of-ppt"><span class="n">9</span><span><b>Video</b><span class="d">Demo clip and the recorded talk</span></span></a>
 </div>
 
@@ -84,11 +84,6 @@ We reimplemented COUNT Forest from the paper's description, then trained and tes
 - **Test results for four variants of the method**, with the paper's own figures quoted for reference ([section 5.1](#51-quantitative-results-on-the-test-set)).
 - **Ablation studies on a validation block**, with an estimate of the noise between two random seeds ([section 5.2](#52-ablations)).
 - **Applications and failure analysis:** a heat-map and stationary-time application, a demo video ([section 5.3](#53-qualitative-results-and-applications)) and an analysis of failure cases ([section 5.5](#55-failure-cases)).
-
-!!! abstract "Main results"
-    - **Accuracy.** Test MAE is 4.41 to 4.46, against 2.50 for the paper's full method (quoted, not re-run). The counts correlate 0.84 with the truth but are about 13% too low.
-    - **Variants.** Forest permutation makes density estimation 1.8 times faster for a 0.02 change in MAE. The crowdedness prior changes MAE by −0.03, less than the 0.24 gap between two random seeds.
-    - **What matters.** In the ablations, the feature channels, the split criterion and the label radius \(R\) matter most. More trees, a finer patch stride and more training patches per frame did not lower the validation error. Heat maps and stationary-time maps from the estimated density correlate 0.58 to 0.68 with maps from the annotations.
 
 ---
 
@@ -290,11 +285,6 @@ The paper fixes the forest's size and the feature set but leaves several setting
 | Patch grid at test time | not given | one patch every 3 px (29,908 per frame) |
 | Prior threshold \(N\) | max label size (9 here) | 6 |
 | First frame under the prior | not stated | the plain forest |
-
-Two points about the pipeline matter for a fair reading of the results:
-
-- **Causal processing.** The background model and the temporal difference need the frames in order, so test frames are processed after streaming the whole video from frame 1.
-- **Out of scope.** The paper's semi-automatic training (GrabCut person masks pasted on the background) and its UCSD experiments are not part of this work.
 
 ---
 
@@ -518,7 +508,7 @@ Forest permutation made density estimation 1.8 times faster with no measurable c
 
 ## 8. Link to PPT file (on GitHub)
 
-**PPT:** [COUNT_Forest_presentation.pptx](https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/ppt/COUNT_Forest_presentation.pptx) (26 slides, speaker notes included)
+**PPT:** [COUNT_Forest_presentation.pptx](https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/ppt/COUNT_Forest_presentation.pptx)
 
 **Code:** [count_forest_full.ipynb](https://github.com/jalaj-chaudhary/count-forest-crowd-counting/blob/main/count_forest_full.ipynb)
 
@@ -539,7 +529,8 @@ The demo shows the first 300 test frames with the density overlay, the estimated
 
 ### Screen recording of the PPT
 
-<!-- Replace PPT_VIDEO_ID once the recording is on YouTube -->
 <div class="video">
-<iframe src="https://www.youtube.com/embed/PPT_VIDEO_ID" title="COUNT Forest presentation" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/1dfTp4FRBaE" title="COUNT Forest presentation" allowfullscreen></iframe>
 </div>
+
+[Watch on YouTube](https://www.youtube.com/watch?v=1dfTp4FRBaE)
